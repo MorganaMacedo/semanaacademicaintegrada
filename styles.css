@@ -1034,6 +1034,14 @@ img {
   box-shadow: 0 1.5rem 5rem rgb(22 7 28 / 25%);
 }
 
+.jotform-frame {
+  display: block;
+  width: 100%;
+  min-height: 68rem;
+  border: 0;
+  background: #ffffff;
+}
+
 .form-heading {
   display: flex;
   align-items: baseline;
