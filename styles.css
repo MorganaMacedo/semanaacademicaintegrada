@@ -44,6 +44,7 @@ body.menu-open {
 img {
   display: block;
   max-width: 100%;
+  height: auto;
 }
 
 a {
@@ -887,6 +888,9 @@ button, a {
 
 .gurias-logo-wrap {
   position: relative;
+  width: 100%;
+  max-width: 520px;
+  justify-self: center;
 }
 
 .gurias-logo-wrap::before,
@@ -916,6 +920,7 @@ button, a {
   position: relative;
   z-index: 1;
   width: 100%;
+  height: auto;
   border-radius: 22px;
   box-shadow: 0 30px 75px rgba(0, 0, 0, .4);
 }
@@ -980,7 +985,7 @@ button, a {
 
 .speaker-card > img {
   width: 100%;
-  aspect-ratio: 4 / 5;
+  height: clamp(220px, 22vw, 300px);
   object-fit: cover;
   object-position: center top;
   background: #ded9f2;
