@@ -1,202 +1,120 @@
-(() => {
-  const menuButton = document.querySelector("[data-menu-button]");
-  const navigation = document.querySelector("[data-navigation]");
+const header = document.querySelector("[data-header]")
+const menuToggle = document.querySelector("[data-menu-toggle]")
+const menu = document.querySelector("[data-menu]")
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
-  const closeMenu = () => {
-    if (!menuButton || !navigation) return;
-    menuButton.setAttribute("aria-expanded", "false");
-    menuButton.querySelector(".sr-only").textContent = "Abrir menu";
-    navigation.classList.remove("is-open");
-    document.body.classList.remove("menu-open");
-  };
+const updateHeader = () => {
+  header?.classList.toggle("is-scrolled", window.scrollY > 24)
+}
 
-  if (menuButton && navigation) {
-    menuButton.addEventListener("click", () => {
-      const open = menuButton.getAttribute("aria-expanded") === "true";
-      menuButton.setAttribute("aria-expanded", String(!open));
-      menuButton.querySelector(".sr-only").textContent = open ? "Abrir menu" : "Fechar menu";
-      navigation.classList.toggle("is-open", !open);
-      document.body.classList.toggle("menu-open", !open);
-    });
+const closeMenu = () => {
+  if (!menuToggle || !menu) return
+  menuToggle.setAttribute("aria-expanded", "false")
+  menu.classList.remove("is-open")
+  document.body.classList.remove("menu-open")
+}
 
-    navigation.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
+updateHeader()
+window.addEventListener("scroll", updateHeader, { passive: true })
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && navigation.classList.contains("is-open")) {
-        closeMenu();
-        menuButton.focus();
-      }
-    });
+menuToggle?.addEventListener("click", () => {
+  const open = menuToggle.getAttribute("aria-expanded") === "true"
+  menuToggle.setAttribute("aria-expanded", String(!open))
+  menu?.classList.toggle("is-open", !open)
+  document.body.classList.toggle("menu-open", !open)
+})
 
-    window.addEventListener("resize", () => {
-      if (window.innerWidth > 1020) closeMenu();
-    });
+menu?.querySelectorAll("a").forEach(link => link.addEventListener("click", closeMenu))
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") closeMenu()
+})
+
+const carousel = document.querySelector("[data-carousel]")
+
+if (carousel) {
+  const slides = [...carousel.querySelectorAll(".hero-slide")]
+  const dots = [...carousel.querySelectorAll("[data-carousel-dot]")]
+  const previous = carousel.querySelector("[data-carousel-prev]")
+  const next = carousel.querySelector("[data-carousel-next]")
+  let current = 0
+  let timer
+
+  const showSlide = index => {
+    current = (index + slides.length) % slides.length
+    slides.forEach((slide, slideIndex) => {
+      const active = slideIndex === current
+      slide.classList.toggle("is-active", active)
+      slide.inert = !active
+    })
+    dots.forEach((dot, dotIndex) => {
+      const active = dotIndex === current
+      dot.classList.toggle("is-active", active)
+      dot.setAttribute("aria-selected", String(active))
+      dot.tabIndex = active ? 0 : -1
+    })
   }
 
-  const carousel = document.querySelector("[data-carousel]");
-
-  if (carousel) {
-    const slides = [...carousel.querySelectorAll("[data-slide]")];
-    const dots = [...carousel.querySelectorAll("[data-dot]")];
-    const previousButton = carousel.querySelector("[data-previous]");
-    const nextButton = carousel.querySelector("[data-next]");
-    const playButton = carousel.querySelector("[data-play]");
-    const playIcon = carousel.querySelector("[data-play-icon]");
-    const counter = carousel.querySelector("[data-counter]");
-    const announcement = carousel.querySelector("[data-carousel-announcement]");
-    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let current = 0;
-    let userPaused = motionPreference.matches;
-    let interactionPaused = false;
-    let pageHidden = document.hidden;
-    let timer = 0;
-    let pointerStart = null;
-
-    const isPaused = () => userPaused || interactionPaused || pageHidden;
-
-    const updatePlayButton = () => {
-      const paused = isPaused();
-      playButton.setAttribute("aria-pressed", String(paused));
-      playButton.setAttribute("aria-label", paused ? "Iniciar apresentação automática" : "Pausar apresentação automática");
-      playIcon.textContent = paused ? "▶" : "Ⅱ";
-    };
-
-    const stopTimer = () => {
-      if (timer) window.clearInterval(timer);
-      timer = 0;
-    };
-
-    const startTimer = () => {
-      stopTimer();
-      updatePlayButton();
-      if (isPaused()) return;
-      timer = window.setInterval(() => showSlide(current + 1, false), 7000);
-    };
-
-    const showSlide = (index, announce = true) => {
-      current = (index + slides.length) % slides.length;
-      slides.forEach((slide, slideIndex) => {
-        const active = slideIndex === current;
-        slide.classList.toggle("is-active", active);
-        slide.setAttribute("aria-hidden", String(!active));
-        slide.inert = !active;
-      });
-      dots.forEach((dot, dotIndex) => {
-        const active = dotIndex === current;
-        dot.classList.toggle("is-active", active);
-        if (active) dot.setAttribute("aria-current", "true");
-        else dot.removeAttribute("aria-current");
-      });
-      counter.value = `${String(current + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
-      counter.textContent = counter.value;
-      if (announce) announcement.textContent = `Slide ${current + 1} de ${slides.length}.`;
-    };
-
-    previousButton.addEventListener("click", () => {
-      showSlide(current - 1);
-      startTimer();
-    });
-
-    nextButton.addEventListener("click", () => {
-      showSlide(current + 1);
-      startTimer();
-    });
-
-    dots.forEach((dot, index) => {
-      dot.addEventListener("click", () => {
-        showSlide(index);
-        startTimer();
-      });
-    });
-
-    playButton.addEventListener("click", () => {
-      userPaused = !userPaused;
-      startTimer();
-    });
-
-    carousel.addEventListener("pointerenter", () => {
-      interactionPaused = true;
-      startTimer();
-    });
-
-    carousel.addEventListener("pointerleave", () => {
-      interactionPaused = false;
-      startTimer();
-    });
-
-    carousel.addEventListener("focusin", () => {
-      interactionPaused = true;
-      startTimer();
-    });
-
-    carousel.addEventListener("focusout", (event) => {
-      if (!carousel.contains(event.relatedTarget)) {
-        interactionPaused = false;
-        startTimer();
-      }
-    });
-
-    carousel.addEventListener("pointerdown", (event) => {
-      if (event.pointerType !== "mouse") pointerStart = event.clientX;
-    });
-
-    carousel.addEventListener("pointerup", (event) => {
-      if (pointerStart === null) return;
-      const distance = event.clientX - pointerStart;
-      pointerStart = null;
-      if (Math.abs(distance) < 45) return;
-      showSlide(distance > 0 ? current - 1 : current + 1);
-      startTimer();
-    });
-
-    document.addEventListener("visibilitychange", () => {
-      pageHidden = document.hidden;
-      startTimer();
-    });
-
-    motionPreference.addEventListener("change", (event) => {
-      if (event.matches) userPaused = true;
-      startTimer();
-    });
-
-    showSlide(0, false);
-    startTimer();
+  const stop = () => window.clearInterval(timer)
+  const start = () => {
+    stop()
+    if (!reduceMotion && !document.hidden) timer = window.setInterval(() => showSlide(current + 1), 6500)
   }
 
-  const agenda = document.querySelector("[data-agenda]");
+  previous?.addEventListener("click", () => {
+    showSlide(current - 1)
+    start()
+  })
 
-  if (agenda) {
-    const tabs = [...agenda.querySelectorAll("[data-agenda-tab]")];
-    const panels = [...agenda.querySelectorAll("[data-agenda-panel]")];
+  next?.addEventListener("click", () => {
+    showSlide(current + 1)
+    start()
+  })
 
-    const selectTab = (index, focus = false) => {
-      tabs.forEach((tab, tabIndex) => {
-        const active = tabIndex === index;
-        tab.setAttribute("aria-selected", String(active));
-        tab.tabIndex = active ? 0 : -1;
-      });
-      panels.forEach((panel, panelIndex) => {
-        panel.hidden = panelIndex !== index;
-      });
-      if (focus) {
-        tabs[index].focus();
-        tabs[index].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-      }
-    };
+  dots.forEach(dot => dot.addEventListener("click", () => {
+    showSlide(Number(dot.dataset.carouselDot))
+    start()
+  }))
 
-    tabs.forEach((tab, index) => {
-      tab.addEventListener("click", () => selectTab(index));
-      tab.addEventListener("keydown", (event) => {
-        let target = index;
-        if (event.key === "ArrowRight") target = (index + 1) % tabs.length;
-        else if (event.key === "ArrowLeft") target = (index - 1 + tabs.length) % tabs.length;
-        else if (event.key === "Home") target = 0;
-        else if (event.key === "End") target = tabs.length - 1;
-        else return;
-        event.preventDefault();
-        selectTab(target, true);
-      });
-    });
-  }
+  carousel.addEventListener("mouseenter", stop)
+  carousel.addEventListener("mouseleave", start)
+  carousel.addEventListener("focusin", stop)
+  carousel.addEventListener("focusout", start)
+  document.addEventListener("visibilitychange", () => document.hidden ? stop() : start())
+  showSlide(0)
+  start()
+}
 
-})();
+const scheduleTabs = [...document.querySelectorAll("[data-day]")]
+const schedulePanels = [...document.querySelectorAll("[data-panel]")]
+
+const activateDay = day => {
+  scheduleTabs.forEach(tab => {
+    const active = tab.dataset.day === day
+    tab.classList.toggle("is-active", active)
+    tab.setAttribute("aria-selected", String(active))
+    tab.tabIndex = active ? 0 : -1
+  })
+  schedulePanels.forEach(panel => {
+    const active = panel.dataset.panel === day
+    panel.classList.toggle("is-active", active)
+    panel.hidden = !active
+  })
+}
+
+scheduleTabs.forEach((tab, index) => {
+  tab.addEventListener("click", () => activateDay(tab.dataset.day))
+  tab.addEventListener("keydown", event => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return
+    event.preventDefault()
+    let nextIndex = index
+    if (event.key === "ArrowLeft") nextIndex = (index - 1 + scheduleTabs.length) % scheduleTabs.length
+    if (event.key === "ArrowRight") nextIndex = (index + 1) % scheduleTabs.length
+    if (event.key === "Home") nextIndex = 0
+    if (event.key === "End") nextIndex = scheduleTabs.length - 1
+    activateDay(scheduleTabs[nextIndex].dataset.day)
+    scheduleTabs[nextIndex].focus()
+  })
+})
+
+activateDay("20")

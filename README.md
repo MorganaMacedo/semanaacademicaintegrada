@@ -1,9 +1,9 @@
-# UCPel Summit 2026
+# 3ª Semana Acadêmica Integrada
 
-Página oficial da semana acadêmica da Universidade Católica de Pelotas, programada para o período de 19 a 24 de outubro de 2026.
+Site oficial da Semana Acadêmica Integrada da Universidade Católica de Pelotas, programada para os dias 20 a 23 de outubro de 2026.
 
-O site apresenta informações institucionais, carrossel fotográfico, programação diária, espaço para divulgação dos palestrantes, mapa do Auditório Dom Antônio Zattera e formulário de inscrição integrado ao serviço do evento.
+A página apresenta os cursos participantes, a programação completa, o 3º Gurias Tech, palestrantes, mapa do Auditório Dom Antônio Zattera e formulário de inscrição.
 
 ## Publicação
 
-O projeto utiliza HTML, CSS e JavaScript, sem dependências de compilação. Para publicar no GitHub Pages, selecione a branch `main` e o diretório raiz nas configurações do repositório.
+O projeto utiliza HTML, CSS e JavaScript, sem dependências de compilação, e é publicado pelo GitHub Pages a partir da branch `main`.
