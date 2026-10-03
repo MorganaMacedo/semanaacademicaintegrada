@@ -991,6 +991,10 @@ button, a {
   background: #ded9f2;
 }
 
+.speaker-card > img.speaker-photo-fabio {
+  object-position: 20% center;
+}
+
 .speaker-card-logo > img {
   object-fit: contain;
   background: var(--white);
