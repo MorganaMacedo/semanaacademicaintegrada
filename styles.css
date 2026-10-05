@@ -1211,7 +1211,7 @@ button, a {
 
 .sponsor-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 22px;
 }
 
@@ -1242,6 +1242,15 @@ button, a {
 .sponsor-card-dark img {
   padding: 26px;
   background: #050505;
+}
+
+.sponsor-card-croasonho img {
+  padding: 24px;
+}
+
+.sponsor-card-vg img {
+  padding: 28px;
+  background: #042558;
 }
 
 .sponsor-card h3 {
