@@ -1211,7 +1211,7 @@ button, a {
 
 .sponsor-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 22px;
 }
 
@@ -1262,6 +1262,10 @@ button, a {
   background: #737373;
 }
 
+.sponsor-card-alex img {
+  padding: 22px;
+}
+
 .sponsor-card h3 {
   margin: 0;
   padding: 20px 22px 22px;
@@ -1270,6 +1274,20 @@ button, a {
   font-size: 1.08rem;
   line-height: 1.25;
   text-align: center;
+}
+
+@media (min-width: 1081px) {
+  .sponsor-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .sponsor-card {
+    grid-column: span 3;
+  }
+
+  .sponsor-card:nth-last-child(3) {
+    grid-column: 2 / span 3;
+  }
 }
 
 .site-footer {
