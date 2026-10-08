@@ -1278,15 +1278,15 @@ button, a {
 
 @media (min-width: 1081px) {
   .sponsor-grid {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-columns: repeat(10, minmax(0, 1fr));
   }
 
   .sponsor-card {
-    grid-column: span 3;
+    grid-column: span 2;
   }
 
   .sponsor-card:nth-last-child(3) {
-    grid-column: 2 / span 3;
+    grid-column: 3 / span 2;
   }
 }
 
